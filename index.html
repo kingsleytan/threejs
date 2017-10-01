@@ -121,7 +121,7 @@
       scene.add( cube2 );
 
       var cube3 = new THREE.Mesh( geometry, material );
-        cube3.position.x = 10;
+        cube3.position.x = 5;
         cube3.position.y = 4;
         cube3.position.z = 20;
       scene.add( cube3 );
@@ -154,9 +154,17 @@
         cube2.rotation.x += 0.02;
         cube2.rotation.y += 0.003;
         cube3.rotation.x += 0.008;
-        cube3.rotation.y += 0.0014;
+
 
         var time = Date.now( ) * 0.0005;
+
+        cube3.rotation.x = Math.cos( time * 0.5 ) * 40;
+        cube3.rotation.y = Math.sin ( time );
+
+        cube3.position.x = Math.sin( time ) * 5;
+        cube3.position.y = Math.cos( time ) * 3;
+        cube3.position.z = Math.cos( time ) * 4;
+
 
         light1.position.x = Math.sin( time * 0.7 ) * 30;
   			light1.position.y = Math.cos( time * 0.5 ) * 40;
