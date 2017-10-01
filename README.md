@@ -16,4 +16,4 @@
 
 - Scene Graph
 
-![Scene Graph](img/node-map.png)
+- ![Scene Graph](img/node-map.png)
