@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Three.js First Project</title>
+    <style media="screen">
+      body { margin: 0; }
+      convas { width: 100%; height: 100%; }
+    </style>
+  </head>
+
+  <body>
+    <script src="js/three.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script src="js/ObjectLoader.js"></script>
+
+    <script>
+      
+      (function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();stats.domElement.style.cssText='position:fixed;left:0;top:0;z-index:10000';document.body.appendChild(stats.domElement);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//rawgit.com/mrdoob/stats.js/master/build/stats.min.js';document.head.appendChild(script);})()
+
+      var scene = new THREE.Scene( );
+      var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+      var renderer = new THREE.WebGLRenderer( );
+
+      renderer.setSize( window.innerWidth, window.innerHeight );
+      document.body.appendChild( renderer.domElement );
+
+      window.addEventListener( 'resize', function( ){
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        renderer.setSize( width, height );
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+      })
+
+      controls = new THREE.OrbitControls( camera, renderer.domElement );
+      //create the shape
+
+      camera.position.z = 7;
+
+      var loader = new THREE.ObjectLoader();
+      loader.load(
+        'models/Head.json',
+        function (object) {
+          scene.add(object);
+        }
+      );
+
+      // var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+      // var cubeMaterials = [
+      //   new THREE.MeshLambertMaterial({ map: new THREE.TextureLoader().load('img/1.jpg'), side: THREE.DoubleSide }),
+      //   //DoubleSide means when camera zoom inside of the cube, we can still see the mirror-image of the image.
+      //   new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('img/2.jpg'), side: THREE.DoubleSide }),
+      //   new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/3.jpg'), side: THREE.DoubleSide }),
+      //   new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/4.jpg'), side: THREE.DoubleSide }),
+      //   new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/5.jpg'), side: THREE.DoubleSide }),
+      //   new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/6.jpg'), side: THREE.DoubleSide })
+      // ];
+      //
+      // //create a material, colour or image texture
+      // var material = new THREE.MeshLambertMaterial({ color: 0xFFFFFF, wireframe: false });
+      // // var material = new THREE.MeshFaceMaterial( cubeMaterials );
+      // var cube = new THREE.Mesh( geometry, material );
+      // scene.add( cube );
+      // var cube2 = new THREE.Mesh( geometry, material );
+      // scene.add( cube2 );
+      // var cube3 = new THREE.Mesh( geometry, material );
+      // scene.add( cube3 );
+      //
+      // camera.position.z = 3; // put background backwards
+      //
+      var ambientLight = new THREE.AmbientLight( 0xFFFFFF, 0.1 );
+      scene.add(ambientLight);
+      //
+      // var light1 = new THREE.PointLight( 0xFF0840, 4, 50 ); //(color of light, intensity, distance)
+      // // scene.add(light1);
+      // var light2 = new THREE.PointLight( 0x8040FF, 5, 50 ); //(color of light, intensity, distance)
+      // // scene.add(light2);
+      // var light3 = new THREE.PointLight( 0x80FF80, 5, 50 ); //(color of light, intensity, distance)
+      // // scene.add(light3);
+      //
+      // var topDirectionalLight = new THREE.DirectionalLight ( 0x0abab5, 1);
+      // scene.add(topDirectionalLight);
+      //
+      // var bottomDirectionalLight = new THREE.DirectionalLight ( 0xFFFFF5, 1);
+      // bottomDirectionalLight.position.set( -1, 0, 1 );
+      // scene.add(bottomDirectionalLight);
+      //
+      // var spotLight = new THREE.SpotLight( 0xaba05, 3 );
+      // spotLight.position.set( 0, 0, 1 )
+      // scene.add(spotLight);
+
+      //game logic
+      var update = function ( )
+      {
+        // cube.rotation.x += 0.01;
+        // cube.rotation.y += 0.005;
+        // cube2.rotation.x += 0.02;
+        // cube2.rotation.y += 0.003;
+        // cube3.rotation.x += 0.008;
+        // cube3.rotation.y += 0.0014;
+        //
+        // var time = Date.now() * 0.0005;
+        //
+        // light1.position.x = Math.sin( time * 0.7 ) * 30;
+        // light1.position.y = Math.cos( time * 0.5 ) * 30;
+        // light1.position.z = Math.cos( time * 0.3 ) * 30;
+        //
+        // light2.position.x = Math.cos( time * 0.7 ) * 30;
+        // light2.position.y = Math.sin( time * 0.5 ) * 30;
+        // light2.position.z = Math.sin( time * 0.3 ) * 30;
+        //
+        // light3.position.x = Math.sin( time * 0.7 ) * 30;
+        // light3.position.y = Math.cos( time * 0.5 ) * 30;
+        // light3.position.z = Math.sin( time * 0.3 ) * 30;
+
+      };
+
+      //draw Scene
+      var render = function ( )
+      {
+        renderer.render( scene, camera );
+      };
+
+      // run game loop (update, render, repeat)
+      var GameLoop = function ( )
+      {
+        requestAnimationFrame( GameLoop );
+
+        update( );
+        render( );
+      };
+
+      GameLoop( );
+    </script>
+
+  </body>
+</html>
