@@ -3,8 +3,15 @@
   <head>
     <title>Three.js First Project</title>
     <style media="screen">
-      body { margin: 0; }
-      convas { width: 100%; height: 100%; }
+
+      body {
+        margin: 0;
+      }
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
+
     </style>
   </head>
 
@@ -12,6 +19,7 @@
     <script src="js/three.js"></script>
     <script src="js/OrbitControls.js"></script>
     <script src="js/ObjectLoader.js"></script>
+    <script src="js/AnaglyphEffect.js"></script>
 
     <script>
       //Refer: https://github.com/mrdoob/stats.js
@@ -32,86 +40,135 @@
         camera.updateProjectionMatrix();
       })
 
+      // var effect = new THREE.AnaglyphEffect( renderer );
+		  //  effect.setSize( window.innerWidth, window.innerHeight );
+
+
       controls = new THREE.OrbitControls( camera, renderer.domElement );
-      //create the shape
 
       camera.position.z = 7;
 
-      var loader = new THREE.ObjectLoader();
-      loader.load(
-        'models/Head.json',
-        function (object) {
-          scene.add(object);
-        }
-      );
+      // Skybox
+		// Skybox texture website http://www.custommapmakers.org/skyboxes.php
+		var geometry = new THREE.CubeGeometry( 1000, 1000, 1000 );
+		var cubeMaterials =
+		[
+			new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader( ).load( 'img/Skybox/shadowpeak_ft.png' ), side: THREE.DoubleSide } ), // Right side
+			new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader( ).load( 'img/Skybox/shadowpeak_bk.png' ), side: THREE.DoubleSide } ), // Left side
+			new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader( ).load( 'img/Skybox/shadowpeak_up.png' ), side: THREE.DoubleSide } ), // Top side
+			new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader( ).load( 'img/Skybox/shadowpeak_dn.png' ), side: THREE.DoubleSide } ), // Bottom side
+			new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader( ).load( 'img/Skybox/shadowpeak_rt.png' ), side: THREE.DoubleSide } ), // Front side
+			new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader( ).load( 'img/Skybox/shadowpeak_lf.png' ), side: THREE.DoubleSide } ) // Back side
+		];
 
-      // var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-      // var cubeMaterials = [
-      //   new THREE.MeshLambertMaterial({ map: new THREE.TextureLoader().load('img/1.jpg'), side: THREE.DoubleSide }),
-      //   //DoubleSide means when camera zoom inside of the cube, we can still see the mirror-image of the image.
-      //   new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('img/2.jpg'), side: THREE.DoubleSide }),
-      //   new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/3.jpg'), side: THREE.DoubleSide }),
-      //   new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/4.jpg'), side: THREE.DoubleSide }),
-      //   new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/5.jpg'), side: THREE.DoubleSide }),
-      //   new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/6.jpg'), side: THREE.DoubleSide })
-      // ];
-      //
-      // //create a material, colour or image texture
-      // var material = new THREE.MeshLambertMaterial({ color: 0xFFFFFF, wireframe: false });
-      // // var material = new THREE.MeshFaceMaterial( cubeMaterials );
-      // var cube = new THREE.Mesh( geometry, material );
-      // scene.add( cube );
-      // var cube2 = new THREE.Mesh( geometry, material );
-      // scene.add( cube2 );
-      // var cube3 = new THREE.Mesh( geometry, material );
-      // scene.add( cube3 );
-      //
-      // camera.position.z = 3; // put background backwards
-      //
-      var ambientLight = new THREE.AmbientLight( 0xFFFFFF, 0.1 );
-      scene.add(ambientLight);
-      //
-      // var light1 = new THREE.PointLight( 0xFF0840, 4, 50 ); //(color of light, intensity, distance)
-      // // scene.add(light1);
-      // var light2 = new THREE.PointLight( 0x8040FF, 5, 50 ); //(color of light, intensity, distance)
-      // // scene.add(light2);
-      // var light3 = new THREE.PointLight( 0x80FF80, 5, 50 ); //(color of light, intensity, distance)
-      // // scene.add(light3);
-      //
-      // var topDirectionalLight = new THREE.DirectionalLight ( 0x0abab5, 1);
-      // scene.add(topDirectionalLight);
-      //
-      // var bottomDirectionalLight = new THREE.DirectionalLight ( 0xFFFFF5, 1);
-      // bottomDirectionalLight.position.set( -1, 0, 1 );
-      // scene.add(bottomDirectionalLight);
-      //
-      // var spotLight = new THREE.SpotLight( 0xaba05, 3 );
-      // spotLight.position.set( 0, 0, 1 )
-      // scene.add(spotLight);
+    var cubeMaterial = new THREE.MeshFaceMaterial( cubeMaterials );
+		var skybox = new THREE.Mesh( geometry, cubeMaterial );
+		scene.add( skybox );
+
+      // instantiate a loader
+		var loader = new THREE.ObjectLoader( );
+
+		// load a resource
+		loader.load
+		(
+			// resource URL
+			'models/Head.json',
+			// Function when resource is loaded
+			function ( object )
+			{
+				scene.add( object );
+			}
+		);
+
+		// load a resource
+		loader.load
+		(
+			// resource URL
+			'models/skull.json',
+			// Function when resource is loaded
+			function ( object )
+			{
+				object.position.z = 100;
+				scene.add( object );
+			}
+		);
+
+      //create cube
+      var geometry = new THREE.BoxGeometry( 2, 2, 2 );
+      var cubeMaterials = [
+        new THREE.MeshLambertMaterial({ map: new THREE.TextureLoader().load('img/1.jpg'), side: THREE.DoubleSide }),
+        //DoubleSide means when camera zoom inside of the cube, we can still see the mirror-image of the image.
+        new THREE.MeshPhongMaterial({ map: new THREE.TextureLoader().load('img/2.jpg'), side: THREE.DoubleSide }),
+        new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/3.jpg'), side: THREE.DoubleSide }),
+        new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/4.jpg'), side: THREE.DoubleSide }),
+        new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/5.jpg'), side: THREE.DoubleSide }),
+        new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('img/6.jpg'), side: THREE.DoubleSide })
+      ];
+
+      //create a material, colour or image texture
+      var material = new THREE.MeshLambertMaterial({ color: 0xFFFFFF, wireframe: false });
+      // var material = new THREE.MeshFaceMaterial( cubeMaterials );
+      var cube = new THREE.Mesh( geometry, material );
+        cube.position.x = 10;
+        cube.position.y = 4;
+        cube.position.z = 20;
+      scene.add( cube );
+
+      var cube2 = new THREE.Mesh( geometry, material );
+        cube2.position.x = 10;
+        cube2.position.y = 4;
+        cube2.position.z = 20;
+      scene.add( cube2 );
+
+      var cube3 = new THREE.Mesh( geometry, material );
+        cube3.position.x = 10;
+        cube3.position.y = 4;
+        cube3.position.z = 20;
+      scene.add( cube3 );
+
+      var ambientLight = new THREE.AmbientLight( 0xFFFFFF, 0.5 );
+  		scene.add( ambientLight );
+
+  		var light1 = new THREE.PointLight( 0xff0040, 4, 50 );
+  		scene.add( light1 );
+
+  		var light2 = new THREE.PointLight( 0x0040ff, 3, 50 );
+  		scene.add( light2 );
+
+  		var light3 = new THREE.PointLight( 0x80ff80, 4, 50 );
+  		scene.add( light3 );
+
+  		var directionalLight = new THREE.DirectionalLight( 0xFFFFFF, 1 );
+  		directionalLight.position.set( 0, 1, 0 );
+  		scene.add( directionalLight );
+
+  		// var spotLight = new THREE.SpotLight( 0xFF45F6, 25 );
+  		// spotLight.position.set( 0, 3, 0 );
+  		// scene.add( spotLight );
 
       //game logic
       var update = function ( )
       {
-        // cube.rotation.x += 0.01;
-        // cube.rotation.y += 0.005;
-        // cube2.rotation.x += 0.02;
-        // cube2.rotation.y += 0.003;
-        // cube3.rotation.x += 0.008;
-        // cube3.rotation.y += 0.0014;
-        //
-        // var time = Date.now() * 0.0005;
-        //
-        // light1.position.x = Math.sin( time * 0.7 ) * 30;
-        // light1.position.y = Math.cos( time * 0.5 ) * 30;
-        // light1.position.z = Math.cos( time * 0.3 ) * 30;
-        //
-        // light2.position.x = Math.cos( time * 0.7 ) * 30;
-        // light2.position.y = Math.sin( time * 0.5 ) * 30;
-        // light2.position.z = Math.sin( time * 0.3 ) * 30;
-        //
-        // light3.position.x = Math.sin( time * 0.7 ) * 30;
-        // light3.position.y = Math.cos( time * 0.5 ) * 30;
-        // light3.position.z = Math.sin( time * 0.3 ) * 30;
+        cube.rotation.x += 0.01;
+        cube.rotation.y += 0.005;
+        cube2.rotation.x += 0.02;
+        cube2.rotation.y += 0.003;
+        cube3.rotation.x += 0.008;
+        cube3.rotation.y += 0.0014;
+
+        var time = Date.now( ) * 0.0005;
+
+        light1.position.x = Math.sin( time * 0.7 ) * 30;
+  			light1.position.y = Math.cos( time * 0.5 ) * 40;
+  			light1.position.z = Math.cos( time * 0.3 ) * 30;
+
+  			light2.position.x = Math.cos( time * 0.3 ) * 30;
+  			light2.position.y = Math.sin( time * 0.5 ) * 40;
+  			light2.position.z = Math.sin( time * 0.7 ) * 30;
+
+  			light3.position.x = Math.sin( time * 0.7 ) * 30;
+  			light3.position.y = Math.cos( time * 0.3 ) * 40;
+  			light3.position.z = Math.sin( time * 0.5 ) * 30;
 
       };
 
@@ -119,6 +176,7 @@
       var render = function ( )
       {
         renderer.render( scene, camera );
+        // effect.render( scene, camera );
       };
 
       // run game loop (update, render, repeat)
