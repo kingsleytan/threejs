@@ -8,6 +8,8 @@
 - [LearningThreeJS.com](http://learningthreejs.com/)
 - [Make HTML presentations slides](http://imakewebthings.com/deck.js/)
 - [Game Extension](http://www.threejsgames.com/extensions/)
+- [tQuery API : three.js + jQuery](https://jeromeetienne.github.io/tquery/)
+- [whs.js](https://whsjs.io/) is a framework for 3D web apps built with Three.js technology.
 
 ## Downloads:
 - [Skyboxes](http://www.custommapmakers.org/skyboxes.php)
